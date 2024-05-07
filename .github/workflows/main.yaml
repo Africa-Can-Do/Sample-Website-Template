@@ -56,9 +56,9 @@ jobs:
     deploy-to-dev:
       runs-on: ubuntu-latest
       environment: 
-        name: devs
+        name: dev
         url: http://devs.auroraverusschool.org.s3-website-us-east-1.amazonaws.com
-      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'devs'
+      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'dev'
       steps:
         - name: Checkout
           uses: actions/checkout@v4
@@ -70,7 +70,7 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: us-east-1
   
-        - name: Deploy to devs S3
+        - name: Deploy to dev S3
           run: |
             aws s3 sync . s3://devs.auroraverusschool.org  --delete --exclude ".git*"
             echo "Invalidating all files to pick new changes from cloudfront"
