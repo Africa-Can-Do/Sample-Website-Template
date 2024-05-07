@@ -9,9 +9,9 @@ jobs:
     deploy:
       runs-on: ubuntu-latest
       environment: 
-        name: qa1
+        name: uat
         url: http://auroraverusschool.org.s3-website-us-east-1.amazonaws.com
-      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'qa1'
+      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'uat'
       steps:
         - name: Checkout
           uses: actions/checkout@v4
@@ -31,9 +31,9 @@ jobs:
     deploy:
       runs-on: ubuntu-latest
       environment: 
-        name: qa
+        name: qa1
         url: http://qa.auroraverusschool.org.s3-website.eu-north-1.amazonaws.com
-      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'qa'
+      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'qa1'
       steps:
         - name: Checkout
           uses: actions/checkout@v4
@@ -43,10 +43,10 @@ jobs:
           with:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: us-east-1
+            aws-region: eu-north-1
   
         - name: Deploy to UAT S3
           run: |
-            aws s3 sync . s3://auroraverusschool.org  --delete --exclude ".git*"
+            aws s3 sync . s3://qa.auroraverusschool.org  --delete --exclude ".git*"
             echo "Invalidating all files to pick new changes from cloudfront"
             aws cloudfront create-invalidation --distribution-id EBSQ36IKJC41X --paths "/*"
