@@ -52,9 +52,7 @@ jobs:
             echo "Invalidating all files to pick new changes from cloudfront"
             aws cloudfront create-invalidation --distribution-id EBSQ36IKJC41X --paths "/*"
 
-
-
-   deploy-to-dev:
+    deploy-to-dev:
       runs-on: ubuntu-latest
       environment: 
         name: devs
