@@ -49,4 +49,4 @@ jobs:
           run: |
             aws s3 sync . s3://qa.auroraverusschool.org  --delete --exclude ".git*"
             echo "Invalidating all files to pick new changes from cloudfront"
-            aws cloudfront create-invalidation --distribution-id EBSQ36IKJC41X --paths "/*"
+            aws cloudfront create-invalidation --distribution-id EWXE6MN2Q7JUQ --paths "/*"
