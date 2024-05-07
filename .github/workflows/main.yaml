@@ -34,7 +34,7 @@ jobs:
       environment: 
         name: devops
         url: http://devops.auroraverusschool.org.s3-website-us-east-1.amazonaws.com
-      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'uat'
+      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'devops'
       steps:
         - name: Checkout
           uses: actions/checkout@v4
