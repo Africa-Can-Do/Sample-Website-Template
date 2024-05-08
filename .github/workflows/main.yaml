@@ -1,7 +1,7 @@
 name: Continuous Deployment
 on: 
     push:
-        branches: [main, uat]
+        branches: [main, uat, devops]
     pull_request:
         types: [closed, opened, reopened]
     workflow_dispatch:
@@ -49,5 +49,28 @@ jobs:
         - name: Deploy to devops S3
           run: |
             aws s3 sync . s3://devops.auroraverusschool.org  --delete --exclude ".git*"
+            echo "Invalidating all files to pick new changes from cloudfront"
+            aws cloudfront create-invalidation --distribution-id EBSQ36IKJC41X --paths "/*"
+
+    deploy-to-devop1:
+      runs-on: ubuntu-latest
+      environment: 
+        name: uat
+        url: http://devops1.auroraverusschool.org.s3-website-us-east-1.amazonaws.com
+      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'devops'
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-1
+  
+        - name: Deploy to UAT S3
+          run: |
+            aws s3 sync . s3://devops1.auroraverusschool.org  --delete --exclude ".git*"
             echo "Invalidating all files to pick new changes from cloudfront"
             aws cloudfront create-invalidation --distribution-id EBSQ36IKJC41X --paths "/*"
