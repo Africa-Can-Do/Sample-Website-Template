@@ -1,7 +1,8 @@
+
 name: Continuous Deployment
 on: 
     push:
-        branches: [main, uat]
+        branches: [main, uat, qa]
     pull_request:
         types: [closed, opened, reopened]
     workflow_dispatch:
@@ -29,6 +30,7 @@ jobs:
             echo "Invalidating all files to pick new changes from cloudfront"
             aws cloudfront create-invalidation --distribution-id EBSQ36IKJC41X --paths "/*"
 
+
     deploy-to-devops:
       runs-on: ubuntu-latest
       environment: 
@@ -51,12 +53,13 @@ jobs:
             aws s3 sync . s3://devops.auroraverusschool.org  --delete --exclude ".git*"
             echo "Invalidating all files to pick new changes from cloudfront"
             aws cloudfront create-invalidation --distribution-id EBSQ36IKJC41X --paths "/*"
+            
     deploy-to-qa:
       runs-on: ubuntu-latest
       environment: 
         name: qa
         url: http://qa1.auroraverusschool.org.s3-website-us-east-1.amazonaws.com
-      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'qa'
+      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'uat'
       steps:
         - name: Checkout
           uses: actions/checkout@v4
@@ -74,3 +77,4 @@ jobs:
             echo "Invalidating all files to pick new changes from cloudfront"
             aws cloudfront create-invalidation --distribution-id E3DC0BHXPUV8X6 --paths "/*"
 
+ 
