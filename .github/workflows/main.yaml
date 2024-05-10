@@ -77,4 +77,3 @@ jobs:
             echo "Invalidating all files to pick new changes from cloudfront"
             aws cloudfront create-invalidation --distribution-id E3DC0BHXPUV8X6 --paths "/*"
 
- 
