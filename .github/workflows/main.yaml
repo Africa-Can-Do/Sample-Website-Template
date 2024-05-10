@@ -57,9 +57,9 @@ jobs:
     deploy-to-qa:
       runs-on: ubuntu-latest
       environment: 
-        name: qa
+        name: qa1
         url: http://qa1.auroraverusschool.org.s3-website-us-east-1.amazonaws.com
-      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'qa'
+      if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'qa1'
       steps:
         - name: Checkout
           uses: actions/checkout@v4
@@ -71,7 +71,7 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: us-east-1
   
-        - name: Deploy to qa S3
+        - name: Deploy to qa1 S3
           run: |
             aws s3 sync . s3://qa1.auroraverusschool.org  --delete --exclude ".git*"
             echo "Invalidating all files to pick new changes from cloudfront"
